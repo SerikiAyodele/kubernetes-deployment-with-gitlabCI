@@ -1,0 +1,45 @@
+#pipelines are executed on gitlab runners and the runners can be installed on different environment, i'll be installing the runner in a docker container
+variables:
+  IMAGE_NAME: seriki/my-app
+  IMAGE_TAG: $CI_PIPELINE_ID
+
+stages:
+    - test
+    - build
+    - deploy
+
+test:
+  stage: test
+  image:
+    name: node:11.10.1
+  script:
+    - cd app
+    - npm install
+    - npm run test
+
+build_image:
+  stage: build
+  image: docker:20
+  before_script:
+    - echo "$CI_REGISTRY_PASS" | docker login -u $CI_REGISTRY_USER --password-stdin
+  script:
+    - docker build -t $IMAGE_NAME:$IMAGE_TAG .
+    - docker push $IMAGE_NAME:$IMAGE_TAG
+    - docker image rm $IMAGE_NAME:$IMAGE_TAG
+
+deploy:
+  stage: deploy
+  image:
+    name: alpine/k8s:1.26.0
+    entrypoint: [""]
+  before_script:
+    - cp $KUBE_CA /tmp/ca.crt
+    - cp $KUBE_CLIENT_CERT /tmp/client.crt
+    - cp $KUBE_CLIENT_KEY /tmp/client.key
+    - curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"  | bash
+    - cd k8s
+  script:
+    - kubectl config get-contexts
+    - kubectl get pods
+    - kustomize edit set image $IMAGE_NAME=$IMAGE_NAME:$IMAGE_TAG
+    - kubectl apply -k .
