@@ -1,4 +1,4 @@
-## demo - Deploying with Gitlab-CI
+#### demo - Deploying with Gitlab-CI
 
 This demo app shows a simple user profile app set up using 
 - index.html with pure js and css styles
@@ -9,7 +9,7 @@ Components are:
 - Docker and Docker-Compose
 - Kubernetes
 - Gitlab-CI
-# ADD BIG COMMANDS
+
 ### With Docker And Docker-Compose
 
 Step 1: Prepare docker file
