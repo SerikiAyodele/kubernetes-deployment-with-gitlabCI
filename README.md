@@ -10,7 +10,7 @@ Components are:
 - Kubernetes
 - Gitlab-CI
 
-### With Docker And Docker-Compose
+## With Docker And Docker-Compose
 
 Step 1: Prepare docker file
 
@@ -37,9 +37,9 @@ Step 5: access the nodejs application from browser
     http://localhost:3000
 
    
-### With Kubernetes
+## With Kubernetes
 Step 1: Deploy yaml files
     Kubernetes applt -f kustomization.yaml
 
-### With Gitlab-CI
+## With Gitlab-CI
 Once the code is commited to gitlab, a pipeline will be automatically triggered
